@@ -29,52 +29,55 @@
   				var btn = document.getElementById("Btn");
   				btn.innerHTML = "Limite de veces escuchado";
   				btn.disabled = true;
+  				var av = document.getElementById("AV");
+  				av.innerHTML = "";
+  				av.style.backgroundColor='initial';
+  				av.style.opacity='1';
+  				av.disabled=false;
   			}
   		}
 		</script>
 		
 	</head>
-	<body>
+	<body class="homepage">
+	<div id="header-wrapper">
+					<div id="header" class="container">
+					</div>
 
-		<!-- Page Wrapper -->
-			<div id="page-wrapper">
-
-				<!-- Wrapper -->
-					<div id="wrapper">
+					<!-- Hero -->
+						<section id="hero" class="container">
 							
-							<section class="panel banner right">
-								<div class="content color0 span-3-75">
-									<h2 class="major">Secuencia 
-									<%String s = (String) request.getAttribute("QN"); out.print(s+":");%>
+								<header>
+									<h2 class="major" style="color: #fff">Secuencia 
+									<%String s = (String) request.getAttribute("QN"); out.print(s+":");
+									String t = (String) request.getAttribute("Type");%>
 									</h2>
+									<hr style="color: #fff"/>
+								</header>
+								
 									<audio id="Player">
-  										<source src="audio/secuencia<%out.print(s+".mp3\""); %> type="audio/mpeg">
+  										<source src="audio/secuencia<%out.print(t+s+".mp3\""); %> type="audio/mpeg">
 										Error: El navegador no acepta el audio. Favor de usar otro navegador.
 									</audio>
-									<button id="Btn" onclick="checkTimesPlayed();">Escuchar por Primera Vez</button>
+									<button id="Btn" onclick="checkTimesPlayed();" style="color: #fff">Escuchar por Primera Vez</button>
 								<form method="get" action="Server">
 									<pre>
 									
 									</pre>
-									Anote en el próximo recuadro los sonidos que escuche:
+									<p style="color: #fff">Anote en el próximo recuadro los sonidos que escuche: </p>
 									<pre>
 									</pre>
-									<textarea name="AV" id="AV" rows="4"></textarea>
-									<input type="submit" value="Próxima secuencia" class="special color2">
+									<textarea name="AV" id="AV" rows="4" disabled 
+									style="background-color: gray; opacity: 0.5; color:#fff;">Sección de respuesta desactivada hasta que el audio sea escuchado dos veces.</textarea>
+									<br /><input type="submit" value="Próxima secuencia" class="special color2" style="color: #fff">
 									
+									<input type="hidden" name="Type" value=<%out.println((String) request.getAttribute("Type")); %>>
 									<input type="hidden" name="Key" value=<%out.println((String) request.getAttribute("Key")); %>>
 									<input type="hidden" name="QN" value=<%out.println(s); %>>
 									</form>
-									</div>
-								<div class="image filtered span-1-75" data-position="25% 25%">
-									<img src="images/pic01.jpg" alt="" />
-								</div>									
-							</section>
-							<div class="copyright">&copy; Luis Edgar Domínguez Llanos. Design: <a href="https://html5up.net">HTML5 UP</a>.</div>
-
-					</div>
-
-			</div>
+						</section>
+				</div>
+		
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/main.js"></script>

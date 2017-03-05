@@ -75,7 +75,12 @@ public class Server extends HttpServlet {
 		String Create = request.getParameter("Create");
 		String QuestionNumber = request.getParameter("QN");
 		String CurrentKey = request.getParameter("Key");
+		String CurrentType = request.getParameter("Type");
 		boolean flag = false;
+		
+		if(CurrentType == null){
+			return;
+		}
 		
 		if(Create != null){
 		Create = Create.toLowerCase();
@@ -87,8 +92,8 @@ public class Server extends HttpServlet {
 						CurrentKey = getUniqueKey() + "type-"+Type;
 						this.Keys.add(CurrentKey);
 						request.setAttribute("Key", CurrentKey);
-						request.setAttribute("QN", "1");
-						request.getRequestDispatcher("/startQuestionnaire.jsp").forward(request, response);
+						request.setAttribute("Type", Type);
+						request.getRequestDispatcher("/qDiagnostico.jsp").forward(request, response);
 						return;
 					}
 				}
@@ -118,9 +123,12 @@ public class Server extends HttpServlet {
 						List<String> ls = this.Answers.get(CurrentKey);
 						if(ls == null)
 							ls = new ArrayList<String>();
-						ls.add("QuestionNumber= "+qn+System.lineSeparator()+"Answer= " +AnswerValue);
+						
+						ls.add("QuestionNumberFromType"+CurrentType+"= "+qn+System.lineSeparator()+"Answer= " +AnswerValue);
+						
 						this.Answers.put(CurrentKey, ls);
 						if(qn < 5){
+							request.setAttribute("Type", CurrentType);
 							request.setAttribute("QN", Integer.toString(qn+1));
 							request.setAttribute("Key", CurrentKey);
 							request.getRequestDispatcher("/startQuestionnaire.jsp").forward(request, response);
@@ -140,5 +148,45 @@ public class Server extends HttpServlet {
 		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String CurrentKey = request.getParameter("Key");
+		String CurrentType = request.getParameter("Type");
+		if(CurrentKey == null || CurrentType == null){
+			return;
+		}
+		if(! this.Keys.contains(CurrentKey)){
+			return;
+		}
+		List<String> ls = new ArrayList<String>();
+		ls.add("Name="+request.getParameter("Name"));
+		ls.add("Age="+request.getParameter("Age"));
+		ls.add("Gender="+request.getParameter("Gender"));
+		ls.add("HearingProblems="+request.getParameter("HearingProblems"));
+		ls.add("ListeningFrequency="+request.getParameter("ListeningFrequency"));
+		ls.add("InstrumentPlayed="+request.getParameter("InstrumentPlayed"));
+		ls.add("SingReason="+request.getParameter("SingReason"));
+		ls.add("SongA="+request.getParameter("SongA"));
+		ls.add("SongB="+request.getParameter("SongB"));
+		ls.add("SongC="+request.getParameter("SongC"));
+		ls.add("StudyMusic="+request.getParameter("StudyMusic"));
+		ls.add("LikesReading="+request.getParameter("LikesReading"));
+		ls.add("Exercises="+request.getParameter("Exercises"));
+		ls.add("TimeAwake="+request.getParameter("TimeAwake"));
+		ls.add("TimeAsleep="+request.getParameter("TimeAsleep"));
+		ls.add("NoisyPlace="+request.getParameter("NoisyPlace"));
+		ls.add("Medicine="+request.getParameter("Medicine"));
+		ls.add("LikesStudying="+request.getParameter("LikesStudying"));
+		ls.add("CurrentState="+request.getParameter("CurrentState"));
+		ls.add("ExamNervousness="+request.getParameter("ExamNervousness"));
+		ls.add("EasilyBored="+request.getParameter("EasilyBored"));
+		ls.add("RegularState="+request.getParameter("RegularState"));
+		System.out.println(ls);
+		this.Answers.put(CurrentKey, ls);
+		request.setAttribute("Type", CurrentType);
+		request.setAttribute("QN", Integer.toString(1));
+		request.setAttribute("Key", CurrentKey);
+		request.getRequestDispatcher("/startQuestionnaire.jsp").forward(request, response);
+		
+	}
+	
 }
