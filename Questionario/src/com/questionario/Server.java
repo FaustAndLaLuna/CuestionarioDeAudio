@@ -151,6 +151,26 @@ public class Server extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String CurrentKey = request.getParameter("Key");
 		String CurrentType = request.getParameter("Type");
+		String Download = request.getParameter("Download");
+		if(Download != null){
+			if(Download.equals("true")){
+				String str = "";
+				List<String> ls = new ArrayList<String>();
+				for(String s: this.Keys){
+					if(this.Answers.containsKey(s)){
+						str+= "User with key=" +s+System.lineSeparator();
+						ls=this.Answers.get(s);
+						for(Iterator<String> i = ls.iterator(); i.hasNext(); ) {
+						  	String item = i.next();
+						  	str+= item+System.lineSeparator();
+						}
+						str +="/===================================/" +System.lineSeparator();
+					}
+				}
+				response.setContentType("text/plain");
+				response.getWriter().append(str);	
+			}
+		}
 		if(CurrentKey == null || CurrentType == null){
 			return;
 		}
@@ -158,6 +178,7 @@ public class Server extends HttpServlet {
 			return;
 		}
 		List<String> ls = new ArrayList<String>();
+		try{
 		ls.add("Name="+request.getParameter("Name"));
 		ls.add("Age="+request.getParameter("Age"));
 		ls.add("Gender="+request.getParameter("Gender"));
@@ -186,7 +207,10 @@ public class Server extends HttpServlet {
 		request.setAttribute("QN", Integer.toString(1));
 		request.setAttribute("Key", CurrentKey);
 		request.getRequestDispatcher("/startQuestionnaire.jsp").forward(request, response);
-		
+		}
+		catch(Exception e){
+			response.getWriter().append("ERROR: Una o más preguntas fueron dejadas sin contestar. Favor de responder a todas las preguntas").append(request.getContextPath());	
+		}
 	}
 	
 }
